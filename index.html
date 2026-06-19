@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือการใช้งาน TwentyShop — สำหรับร้านค้า</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Sarabun',sans-serif;background:#f0f4f8;color:#222;font-size:16px}
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap');
+
+  .header{background:linear-gradient(135deg,#1976D2,#1565C0);color:#fff;padding:28px 20px 20px;text-align:center}
+  .header h1{font-size:1.7rem;font-weight:700;margin-bottom:6px}
+  .header p{font-size:1rem;opacity:.85}
+
+  .progress-wrap{background:#fff;padding:14px 20px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:sticky;top:0;z-index:100}
+  .progress-bar-bg{background:#e0e8f0;border-radius:8px;height:8px;overflow:hidden}
+  .progress-bar-fill{background:#1976D2;height:100%;border-radius:8px;transition:width .4s}
+  .progress-text{font-size:.8rem;color:#555;margin-top:6px;text-align:right}
+
+  .tab-nav{display:flex;overflow-x:auto;gap:6px;padding:12px 16px;background:#fff;border-bottom:2px solid #e8edf2;scrollbar-width:none}
+  .tab-nav::-webkit-scrollbar{display:none}
+  .tab-btn{white-space:nowrap;padding:8px 16px;border-radius:20px;border:1.5px solid #ccd8e8;background:#fff;color:#555;font-size:.82rem;cursor:pointer;transition:all .2s;font-family:'Sarabun',sans-serif}
+  .tab-btn.active{background:#1976D2;color:#fff;border-color:#1976D2}
+  .tab-btn:hover:not(.active){background:#e3f0ff;border-color:#90bff0}
+
+  .step-section{display:none;padding:20px 16px 40px;max-width:900px;margin:0 auto;animation:fadeIn .3s}
+  .step-section.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .step-title{font-size:1.3rem;font-weight:700;color:#1565C0;margin-bottom:4px}
+  .step-sub{font-size:.9rem;color:#666;margin-bottom:18px}
+
+  .card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:20px;margin-bottom:18px}
+  .card h3{font-size:1rem;font-weight:700;color:#1976D2;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e8f0fe}
+
+  .img-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+  .mobile-frame{width:195px;flex-shrink:0;cursor:pointer;transition:transform .2s}
+  .mobile-frame:hover{transform:scale(1.03)}
+  .mobile-frame img{width:100%;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,.15);display:block}
+  .mobile-caption{text-align:center;font-size:.72rem;color:#555;margin-top:5px;padding:0 4px;line-height:1.4}
+
+  .img-box{border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12);cursor:pointer;transition:transform .2s;flex:1;min-width:260px}
+  .img-box:hover{transform:scale(1.02)}
+  .img-box img{width:100%;display:block}
+  .img-box-caption{font-size:.75rem;color:#555;text-align:center;padding:6px 8px;background:#f7f9fb;line-height:1.4}
+
+  .tip{background:#fff8e1;border-left:4px solid #ffa726;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0;font-size:.88rem;line-height:1.6}
+  .tip strong{color:#e65100}
+  .info{background:#e3f2fd;border-left:4px solid #1976D2;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0;font-size:.88rem;line-height:1.6}
+  .info strong{color:#0d47a1}
+  .success{background:#e8f5e9;border-left:4px solid #43a047;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0;font-size:.88rem;line-height:1.6}
+  .success strong{color:#1b5e20}
+
+  .flow-list{list-style:none;padding:0;margin:8px 0}
+  .flow-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px dashed #e8edf2;font-size:.9rem}
+  .flow-list li:last-child{border-bottom:none}
+  .flow-num{background:#1976D2;color:#fff;border-radius:50%;width:22px;height:22px;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+  .nav-btns{display:flex;gap:12px;justify-content:space-between;margin-top:24px}
+  .btn{padding:12px 28px;border-radius:24px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif;transition:all .2s}
+  .btn-prev{background:#e8f0fe;color:#1976D2}
+  .btn-prev:hover{background:#c5d9f8}
+  .btn-next{background:#1976D2;color:#fff}
+  .btn-next:hover{background:#1565C0}
+
+  .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center;padding:20px}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:92vw;max-height:92vh;border-radius:12px;object-fit:contain}
+  .lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:2rem;cursor:pointer;background:rgba(0,0,0,.4);border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+
+  .overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:16px}
+  .ov-card{background:#f5f8ff;border:1.5px solid #d0e4ff;border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s}
+  .ov-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(25,118,210,.15);background:#fff}
+  .ov-icon{font-size:1.9rem;margin-bottom:6px}
+  .ov-label{font-size:.85rem;font-weight:700;color:#1565C0}
+  .ov-desc{font-size:.73rem;color:#888;margin-top:3px}
+
+  .badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.72rem;font-weight:600}
+  .badge-blue{background:#e3f0ff;color:#1565C0}
+  .badge-green{background:#e8f5e9;color:#2e7d32}
+  .badge-orange{background:#fff3e0;color:#e65100}
+
+  @media(max-width:600px){
+    .mobile-frame{width:155px}
+    .img-row{gap:8px}
+    .nav-btns{flex-direction:column}
+    .btn{text-align:center}
+    .header h1{font-size:1.3rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📖 คู่มือการใช้งาน TwentyShop</h1>
+  <p>ระบบบริหารร้านค้า B2B Commerce Platform — สำหรับเจ้าของร้าน (ร้านค้าสมาชิก)</p>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:6.67%"></div></div>
+  <div class="progress-text" id="progressText">ขั้นตอนที่ 1 จาก 15</div>
+</div>
+
+<div class="tab-nav" id="tabNav">
+  <button class="tab-btn active" onclick="goTo(0)">1.ภาพรวม</button>
+  <button class="tab-btn" onclick="goTo(1)">2.เข้าสู่ระบบ</button>
+  <button class="tab-btn" onclick="goTo(2)">3.จัดการสินค้า</button>
+  <button class="tab-btn" onclick="goTo(3)">4.หมวดหมู่</button>
+  <button class="tab-btn" onclick="goTo(4)">5.สั่งซื้อจากโกดัง</button>
+  <button class="tab-btn" onclick="goTo(5)">6.อนุมัติออเดอร์</button>
+  <button class="tab-btn" onclick="goTo(6)">7.เตรียมสินค้า</button>
+  <button class="tab-btn" onclick="goTo(7)">8.รับสินค้าเข้า</button>
+  <button class="tab-btn" onclick="goTo(8)">9.POS ขายหน้าร้าน</button>
+  <button class="tab-btn" onclick="goTo(9)">10.โปรโมชั่น</button>
+  <button class="tab-btn" onclick="goTo(10)">11.ค่าส่ง GPS</button>
+  <button class="tab-btn" onclick="goTo(11)">12.แชท</button>
+  <button class="tab-btn" onclick="goTo(12)">13.ข่าวสาร/ดีล</button>
+  <button class="tab-btn" onclick="goTo(13)">14.Review & Point</button>
+  <button class="tab-btn" onclick="goTo(14)">15.โปรไฟล์ & ตั้งค่า</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 0 — ภาพรวม
+═══════════════════════════════════════════ -->
+<div class="step-section active" id="step-0">
+  <p class="step-title">ภาพรวมระบบ TwentyShop</p>
+  <p class="step-sub">ทำความเข้าใจโครงสร้างและฟีเจอร์หลักของระบบก่อนเริ่มใช้งาน</p>
+
+  <div class="card">
+    <h3>🏗️ โครงสร้างระบบ B2B Commerce</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame" style="width:220px">
+        <img src="image_manual/f2.jpg" onclick="openLightbox(this.src)" alt="หน้าหลัก App">
+        <div class="mobile-caption">หน้าหลักของ TwentyShop App — เมนูหลักทั้งหมด</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:16px">
+      <strong>ระบบประกอบด้วย 2 ส่วนหลัก:</strong><br>
+      <strong>1) Admin Web</strong> (เปิดในเบราว์เซอร์) — จัดการสินค้า หมวดหมู่ คำสั่งซื้อ โปรโมชั่น ค่าส่ง แชท ข่าวสาร รีวิว และตั้งค่า<br>
+      <strong>2) TwentyShop App</strong> (มือถือ Android) — ดูสินค้าโกดัง สั่งซื้อ รับสินค้าเข้า POS ขายหน้าร้าน รายงาน และโปรไฟล์
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗺️ ขั้นตอนการทำงานทั้งหมด — กดเพื่อไปยังหัวข้อ</h3>
+    <div class="overview-grid">
+      <div class="ov-card" onclick="goTo(1)"><div class="ov-icon">🔐</div><div class="ov-label">เข้าสู่ระบบ</div><div class="ov-desc">Web + App</div></div>
+      <div class="ov-card" onclick="goTo(2)"><div class="ov-icon">📦</div><div class="ov-label">จัดการสินค้า</div><div class="ov-desc">เพิ่ม/แก้ไข/Stock</div></div>
+      <div class="ov-card" onclick="goTo(3)"><div class="ov-icon">🏷️</div><div class="ov-label">หมวดหมู่สินค้า</div><div class="ov-desc">จัดกลุ่มสินค้า</div></div>
+      <div class="ov-card" onclick="goTo(4)"><div class="ov-icon">🛒</div><div class="ov-label">สั่งซื้อจากโกดัง</div><div class="ov-desc">ผ่าน App มือถือ</div></div>
+      <div class="ov-card" onclick="goTo(5)"><div class="ov-icon">✅</div><div class="ov-label">อนุมัติออเดอร์</div><div class="ov-desc">Admin Web ยืนยัน</div></div>
+      <div class="ov-card" onclick="goTo(6)"><div class="ov-icon">📋</div><div class="ov-label">เตรียมสินค้า</div><div class="ov-desc">Checker นับสินค้า</div></div>
+      <div class="ov-card" onclick="goTo(7)"><div class="ov-icon">📥</div><div class="ov-label">รับสินค้าเข้า</div><div class="ov-desc">บันทึก + พิมพ์ slip</div></div>
+      <div class="ov-card" onclick="goTo(8)"><div class="ov-icon">🏪</div><div class="ov-label">POS ขายหน้าร้าน</div><div class="ov-desc">ขายสินค้าทันที</div></div>
+      <div class="ov-card" onclick="goTo(9)"><div class="ov-icon">🎁</div><div class="ov-label">โปรโมชั่น/คูปอง</div><div class="ov-desc">ส่วนลดและดีล</div></div>
+      <div class="ov-card" onclick="goTo(10)"><div class="ov-icon">🚚</div><div class="ov-label">ค่าส่ง GPS Zone</div><div class="ov-desc">คำนวณตามระยะทาง</div></div>
+      <div class="ov-card" onclick="goTo(11)"><div class="ov-icon">💬</div><div class="ov-label">แชท</div><div class="ov-desc">สื่อสารกับโกดัง</div></div>
+      <div class="ov-card" onclick="goTo(12)"><div class="ov-icon">📢</div><div class="ov-label">ข่าวสาร/ดีล</div><div class="ov-desc">Broadcast ประกาศ</div></div>
+      <div class="ov-card" onclick="goTo(13)"><div class="ov-icon">⭐</div><div class="ov-label">Review & Point</div><div class="ov-desc">รีวิวและแต้มสะสม</div></div>
+      <div class="ov-card" onclick="goTo(14)"><div class="ov-icon">⚙️</div><div class="ov-label">โปรไฟล์ & ตั้งค่า</div><div class="ov-desc">ข้อมูลร้าน แพ็กเกจ</div></div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <span></span>
+    <button class="btn btn-next" onclick="goTo(1)">ถัดไป: เข้าสู่ระบบ →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 1 — เข้าสู่ระบบ
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-1">
+  <p class="step-title">ขั้นตอนที่ 2 — เข้าสู่ระบบ</p>
+  <p class="step-sub">เข้าใช้งานได้ทั้ง Admin Web (เบราว์เซอร์) และ TwentyShop App (มือถือ Android)</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — เข้าสู่ระบบหลังบ้าน</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b1.jpg" onclick="openLightbox(this.src)" alt="Admin Web Login">
+        <div class="img-box-caption">หน้า Login Admin Web — กรอก Email และ Password แล้วกด "เข้าสู่ระบบ"</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px">
+      <strong>วิธีเข้าสู่ระบบ Admin Web:</strong><br>
+      1. เปิดเบราว์เซอร์ (Chrome แนะนำ) ไปที่ URL ของระบบ<br>
+      2. กรอก Email และ Password ของบัญชีร้านค้า<br>
+      3. กดปุ่ม "เข้าสู่ระบบ"
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 TwentyShop App — เข้าสู่ระบบมือถือ</h3>
+    <div class="img-row" style="justify-content:center;gap:20px">
+      <div class="mobile-frame">
+        <img src="image_manual/f10.jpg" onclick="openLightbox(this.src)" alt="App Login">
+        <div class="mobile-caption">หน้า Login ของ App — ใส่ Email + Password แล้วกด "เข้าสู่ระบบ"</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f1.jpg" onclick="openLightbox(this.src)" alt="หน้าหลักหลัง Login">
+        <div class="mobile-caption">หน้าแรกหลัง Login สำเร็จ — แถบเมนูด้านล่างสำหรับนำทาง</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px">
+      <strong>หมายเหตุ:</strong> ใช้อีเมลและรหัสผ่านเดียวกับ Admin Web ระบบแสดงเมนูตามสิทธิ์ของแต่ละ role อัตโนมัติ
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(0)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(2)">ถัดไป: จัดการสินค้า →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 2 — จัดการสินค้า
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-2">
+  <p class="step-title">ขั้นตอนที่ 3 — จัดการสินค้า</p>
+  <p class="step-sub">เพิ่ม แก้ไขสินค้า ดู Stock Badge และ Stock Card บัญชีสินค้าในร้าน</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — รายการสินค้า</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b3.jpg" onclick="openLightbox(this.src)" alt="หน้าสินค้า Admin Web">
+        <div class="img-box-caption">หน้าสินค้าใน Admin Web — รายการสินค้าทั้งหมดของร้าน</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/b3_1.jpg" onclick="openLightbox(this.src)" alt="เพิ่ม/แก้ไขสินค้า">
+        <div class="img-box-caption">เพิ่มหรือแก้ไขสินค้า — ใส่ชื่อ ราคา รูปภาพ และรายละเอียดสินค้า</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App — สินค้าในร้านพร้อม Stock Badge</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f4.jpg" onclick="openLightbox(this.src)" alt="จัดการสินค้า App">
+        <div class="mobile-caption">แท็บ "จัดการ" → "จัดการสินค้า" — เพิ่ม/แก้ไขสินค้าในร้าน</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_26.jpg" onclick="openLightbox(this.src)" alt="สินค้าในร้าน Stock Badge">
+        <div class="mobile-caption">แท็บ "สินค้าในร้าน" — badge สี: รับเข้า / ขายแล้ว / คงเหลือ ใต้ราคาสินค้า</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_27.jpg" onclick="openLightbox(this.src)" alt="Stock Card">
+        <div class="mobile-caption">Stock Card — กดที่สินค้าเพื่อดูประวัติรับเข้า/ขายออก และยอดคงเหลือแบบบัญชี</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px">
+      <strong>Stock Badge</strong> ใต้ราคาสินค้า: <span class="badge badge-blue">รับเข้า</span> <span class="badge badge-orange">ขายแล้ว</span> <span class="badge badge-green">คงเหลือ</span><br>
+      กดที่สินค้าเพื่อเปิด <strong>Stock Card</strong> ดูรายการธุรกรรมทั้งหมดพร้อม running balance
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(1)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(3)">ถัดไป: หมวดหมู่ →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 3 — หมวดหมู่
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-3">
+  <p class="step-title">ขั้นตอนที่ 4 — หมวดหมู่สินค้า</p>
+  <p class="step-sub">สร้างและจัดการหมวดหมู่เพื่อให้ลูกค้าค้นหาสินค้าได้ง่ายขึ้น</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — จัดการหมวดหมู่</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b4.jpg" onclick="openLightbox(this.src)" alt="หมวดหมู่ Admin Web">
+        <div class="img-box-caption">หน้าหมวดหมู่ — รายการหมวดหมู่สินค้าทั้งหมด</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/b4_1.jpg" onclick="openLightbox(this.src)" alt="เพิ่มหมวดหมู่">
+        <div class="img-box-caption">เพิ่ม/แก้ไขหมวดหมู่ — ตั้งชื่อและเลือกไอคอน กดบันทึก</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px">
+      <strong>คำแนะนำ:</strong> จัดหมวดหมู่ให้ชัดเจน เช่น "เครื่องเขียน", "ของใช้ในบ้าน", "ของเล่น" เพื่อให้ลูกค้าค้นหาสินค้าได้รวดเร็ว
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(2)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(4)">ถัดไป: สั่งซื้อจากโกดัง →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 4 — สั่งซื้อจากโกดัง
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-4">
+  <p class="step-title">ขั้นตอนที่ 5 — สั่งซื้อสินค้าจากโกดัง</p>
+  <p class="step-sub">สั่งซื้อสต็อกสินค้าจากโกดังกลางผ่าน TwentyShop App — ตั้งแต่เลือกสินค้า รับคูปอง จนถึงยืนยันออเดอร์</p>
+
+  <div class="card">
+    <h3>🏷️ ขั้นตอน 1 — ดูสินค้าโกดังและรับคูปอง</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_1.jpg" onclick="openLightbox(this.src)" alt="ดูสินค้าและรับคูปอง">
+        <div class="mobile-caption">หน้ารายละเอียดสินค้า — กด "กดรับคูปองลด ฿10" เพื่อบันทึกคูปองส่วนลด</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_2.jpg" onclick="openLightbox(this.src)" alt="รับคูปองครบ 2 ใบ">
+        <div class="mobile-caption">รับคูปองสำเร็จทั้ง 2 ใบ — จะถูกนำไปใช้อัตโนมัติตอน Checkout</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🛒 ขั้นตอน 2 — ตะกร้าสินค้า</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_3.jpg" onclick="openLightbox(this.src)" alt="ตะกร้าสินค้า">
+        <div class="mobile-caption">ตะกร้าสินค้า — แสดงรายการที่เลือกทั้งหมด 6 รายการ ยอดรวม ฿1,044</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:10px">
+      <strong>เพิ่มสินค้าลงตะกร้า:</strong> กดที่สินค้าจากหน้ารายการโกดัง → เลือกจำนวน → กด "เพิ่มลงตะกร้า"<br>
+      กดไอคอนตะกร้าที่แถบด้านล่างเพื่อดูรายการที่เลือกไว้
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>💳 ขั้นตอน 3 — เลือกวิธีชำระเงิน</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_4.jpg" onclick="openLightbox(this.src)" alt="เลือกวิธีชำระเงิน">
+        <div class="mobile-caption">เลือกวิธีชำระ: เงินสด / พร้อมเพย์ / โอนเงิน — กดเลือกแล้วกด "ถัดไป"</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 ขั้นตอน 4 — ยืนยันคำสั่งซื้อ</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_5.jpg" onclick="openLightbox(this.src)" alt="ยืนยัน ที่อยู่ว่าง">
+        <div class="mobile-caption">หน้ายืนยันออเดอร์ — กรอกที่อยู่จัดส่งก่อน ไม่เช่นนั้นกดสั่งไม่ได้</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_6.jpg" onclick="openLightbox(this.src)" alt="ยืนยัน ที่อยู่ครบ">
+        <div class="mobile-caption">กรอกที่อยู่ครบแล้ว — กด "ยืนยันคำสั่งซื้อ" เพื่อส่งออเดอร์</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ ขั้นตอน 5 — สั่งซื้อสำเร็จ และส่ง Slip</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_7.jpg" onclick="openLightbox(this.src)" alt="สั่งซื้อสำเร็จ">
+        <div class="mobile-caption">สั่งซื้อสำเร็จ! — ระบบออกเลข Order ให้อัตโนมัติ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_8.jpg" onclick="openLightbox(this.src)" alt="ส่ง Slip การชำระเงิน">
+        <div class="mobile-caption">กด "ส่ง Slip การชำระเงิน" เพื่อแนบหลักฐานโอนเงินให้โกดัง</div>
+      </div>
+    </div>
+    <div class="success" style="margin-top:10px">
+      <strong>ออเดอร์ถูกส่งไปยังโกดังแล้ว!</strong> รอทีมโกดังตรวจสอบ Slip และอนุมัติออเดอร์ของคุณ
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(3)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(5)">ถัดไป: อนุมัติออเดอร์ →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 5 — อนุมัติออเดอร์ (โกดัง)
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-5">
+  <p class="step-title">ขั้นตอนที่ 6 — อนุมัติออเดอร์ (ฝั่งโกดัง)</p>
+  <p class="step-sub">หลังร้านค้าสั่งซื้อ ทีมโกดังตรวจสอบ Slip และอนุมัติออเดอร์ผ่าน Admin Web</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — รายการคำสั่งซื้อที่เข้ามา</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/f2_9.jpg" onclick="openLightbox(this.src)" alt="รายการออเดอร์ใน Admin Web">
+        <div class="img-box-caption">หน้า "คำสั่งซื้อ" ใน Admin Web — รายการออเดอร์ทั้งหมด พร้อมสถานะแต่ละรายการ</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/f2_10.jpg" onclick="openLightbox(this.src)" alt="รายละเอียดออเดอร์">
+        <div class="img-box-caption">กด "ดูรายละเอียด" — ตรวจสอบรายการสินค้า ที่อยู่ วิธีชำระ และ Slip ที่แนบมา</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ อนุมัติออเดอร์ → เปลี่ยนสถานะ</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/f2_11.jpg" onclick="openLightbox(this.src)" alt="อนุมัติออเดอร์">
+        <div class="img-box-caption">กด "อนุมัติ" → สถานะเปลี่ยนเป็น "กำลังเตรียม" — ระบบแจ้งร้านค้าอัตโนมัติ</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/f2_17.jpg" onclick="openLightbox(this.src)" alt="รายการออเดอร์หลังอนุมัติ">
+        <div class="img-box-caption">รายการออเดอร์ทั้งหมด — แสดงสถานะ "กำลังเตรียม" และ "ส่งถึงแล้ว" ชัดเจน</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📄 ใบส่งสินค้า / Delivery Note</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/f2_16.jpg" onclick="openLightbox(this.src)" alt="Delivery Note พิมพ์บิล">
+        <div class="img-box-caption">ใบส่งสินค้า (Delivery Note) — พิมพ์ได้จาก Admin Web กด "พิมพ์บิล" เพื่อแนบไปกับสินค้า</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:10px">
+      <strong>สำหรับร้านค้า:</strong> เมื่อโกดังอนุมัติแล้ว จะได้รับ Push Notification แจ้งสถานะออเดอร์ใน App ทันที
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(4)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(6)">ถัดไป: เตรียมสินค้า →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 6 — เตรียมสินค้า (Checker)
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-6">
+  <p class="step-title">ขั้นตอนที่ 7 — เตรียมสินค้า (Checker นับสินค้า)</p>
+  <p class="step-sub">ทีมโกดังนับและเตรียมสินค้าตามออเดอร์ก่อนจัดส่ง — ผ่านหน้า "เตรียมสินค้า" ใน Admin Web และ App</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — หน้าเตรียมสินค้า (กำหนด Checker)</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b6.jpg" onclick="openLightbox(this.src)" alt="หน้าเตรียมสินค้า Admin Web">
+        <div class="img-box-caption">เมนู "เตรียมสินค้า" ใน Admin Web — รายการออเดอร์ที่รอเตรียม พร้อมสถานะการนับ</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/b6_1.jpg" onclick="openLightbox(this.src)" alt="กำหนด Checker">
+        <div class="img-box-caption">เลือกออเดอร์ → กำหนด Checker ผู้รับผิดชอบ → เริ่มกระบวนการเตรียมสินค้า</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App — Checker นับสินค้าทีละขั้นตอน</h3>
+    <div class="img-row" style="justify-content:center;gap:12px;flex-wrap:wrap">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_12.jpg" onclick="openLightbox(this.src)" alt="เตรียมสินค้า เริ่มต้น">
+        <div class="mobile-caption">หน้าเตรียมสินค้า — ยังไม่ได้เลือก Checker และออเดอร์ (ปุ่มเริ่มยังเป็นสีเทา)</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_13.jpg" onclick="openLightbox(this.src)" alt="เลือก Checker และออเดอร์">
+        <div class="mobile-caption">เลือก Checker (ผู้ตรวจ) และเลือกออเดอร์ที่ต้องการเตรียม — ปุ่มเริ่มเปิดใช้งาน</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_14.jpg" onclick="openLightbox(this.src)" alt="นับสินค้า 0%">
+        <div class="mobile-caption">เริ่มนับสินค้า — Progress 0% กรอกจำนวนที่นับได้ในช่องแต่ละรายการ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_15.jpg" onclick="openLightbox(this.src)" alt="นับสินค้า 67%">
+        <div class="mobile-caption">นับสินค้าคืบหน้า 67% — แถบสีเขียวแสดงความคืบหน้า กรอกรายการที่เหลือต่อ</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px">
+      <strong>เมื่อนับครบ 100%</strong> กดปุ่ม "ยืนยันเตรียมสินค้า" เพื่อส่งออเดอร์ให้ร้านค้ารับสินค้า
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(5)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(7)">ถัดไป: รับสินค้าเข้า →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 7 — รับสินค้าเข้า
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-7">
+  <p class="step-title">ขั้นตอนที่ 8 — รับสินค้าเข้าร้าน</p>
+  <p class="step-sub">เมื่อสินค้าจากโกดังมาถึง ตรวจนับ บันทึกรับเข้า พิมพ์รายงาน และแชร์ slip — Stock อัพเดตอัตโนมัติ</p>
+
+  <div class="card">
+    <h3>📱 App — เข้าหน้ารับสินค้า</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_18.jpg" onclick="openLightbox(this.src)" alt="เมนูจัดการ">
+        <div class="mobile-caption">แท็บ "จัดการ" → กด "รับสินค้าเข้า" เพื่อเปิดหน้ารับของ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_19.jpg" onclick="openLightbox(this.src)" alt="รายการรอรับสินค้า">
+        <div class="mobile-caption">หน้า "รับสินค้าเข้า" — ออเดอร์สถานะ "รอรับเข้า" แสดงที่นี่ กดเพื่อเปิดรายการ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📦 ตรวจนับสินค้าที่รับเข้า</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_20.jpg" onclick="openLightbox(this.src)" alt="สินค้าครบ">
+        <div class="mobile-caption">ตรวจนับสินค้า — ตัวเลขสีเขียวหมายถึงสินค้าครบตามออเดอร์ทุกรายการ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_21.jpg" onclick="openLightbox(this.src)" alt="สินค้าขาด">
+        <div class="mobile-caption">พบสินค้าไม่ครบ — ตัวเลขสีแดงพร้อมแจ้ง "ขาด X ชิ้น" ต้องแจ้งโกดัง</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚠️ กรณีสินค้าไม่ครบ — แจ้งโกดังและพิมพ์รายงาน</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_22.jpg" onclick="openLightbox(this.src)" alt="Dialog สินค้าไม่ครบ">
+        <div class="mobile-caption">Dialog "สินค้าไม่ครบ" — เลือก: พิมพ์รายงานขาดส่ง / แชร์ PDF ไปที่ LINE / บันทึกรูปลง Gallery</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:10px">
+      <strong>แนะนำ:</strong> กด "พิมพ์รายงานขาดส่ง" แล้ว "แชร์ PDF ไปที่ LINE" เพื่อแจ้งโกดังส่งสินค้าเพิ่มทันที
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🖨️ พิมพ์รายงานรับสินค้าและบันทึก</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_23.jpg" onclick="openLightbox(this.src)" alt="รายงานรับสินค้า">
+        <div class="mobile-caption">รายงานรับสินค้าเข้า — แสดงรายละเอียดออเดอร์ จำนวนที่นับ และสถานะแต่ละรายการ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_24.jpg" onclick="openLightbox(this.src)" alt="บันทึก PDF">
+        <div class="mobile-caption">เลือก "Save as PDF" เพื่อบันทึกรายงาน หรือพิมพ์ผ่านเครื่องพิมพ์</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:10px">
+      <strong>แชร์ PDF ไปที่ LINE:</strong> ส่งรายงานให้โกดังหรือผู้ที่เกี่ยวข้องทันที<br>
+      <strong>บันทึกรูปลง Gallery:</strong> เก็บเป็นหลักฐานการรับสินค้าในโทรศัพท์
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ หลังรับสินค้าเสร็จ — Stock อัพเดตอัตโนมัติ</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f2_21_1.jpg" onclick="openLightbox(this.src)" alt="Admin Web ออเดอร์ส่งถึงแล้ว">
+        <div class="mobile-caption">Admin Web — ออเดอร์ทั้งหมดอัพเดตสถานะ "ส่งถึงแล้ว" แสดงสีเขียว</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f2_25.jpg" onclick="openLightbox(this.src)" alt="หน้ารับสินค้าว่าง">
+        <div class="mobile-caption">หน้า "รับสินค้าเข้า" ว่าง — ไม่มีออเดอร์ค้างรอรับอีกแล้ว</div>
+      </div>
+    </div>
+    <div class="success" style="margin-top:10px">
+      <strong>Stock อัพเดตอัตโนมัติ!</strong> หลังบันทึกรับสินค้า ยอด Stock badge บนหน้าสินค้าในร้านจะอัพเดตทันที
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(6)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(8)">ถัดไป: POS ขายหน้าร้าน →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 8 — POS ขายหน้าร้าน
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-8">
+  <p class="step-title">ขั้นตอนที่ 9 — POS ขายหน้าร้าน</p>
+  <p class="step-sub">ขายสินค้าให้ลูกค้าหน้าร้านโดยตรงผ่าน App — เลือกสินค้า คิดเงิน พิมพ์ใบเสร็จ Thermal Printer</p>
+
+  <div class="card">
+    <h3>🏪 เปิดหน้า POS และเลือกสินค้า</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f5.jpg" onclick="openLightbox(this.src)" alt="เมนูจัดการ POS">
+        <div class="mobile-caption">แท็บ "จัดการ" → กด "POS ขายหน้าร้าน" เพื่อเปิดโหมดขาย</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f5_1.jpg" onclick="openLightbox(this.src)" alt="หน้า POS สินค้า">
+        <div class="mobile-caption">หน้า POS — แสดงสินค้าในร้านทั้งหมด กดสินค้าเพื่อเพิ่มลงรายการขาย ยอดรวมแสดงด้านล่าง</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:10px">
+      <strong>เพิ่มสินค้า:</strong> กดที่รูปสินค้า → ระบบเพิ่มลงรายการล่างอัตโนมัติ<br>
+      <strong>ปรับจำนวน:</strong> กดปุ่ม − / + ข้างรายการสินค้าด้านล่าง | <strong>ล้าง:</strong> กดปุ่ม "ล้าง"
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>💳 เลือกวิธีชำระและยืนยันการขาย</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f5_2.jpg" onclick="openLightbox(this.src)" alt="เลือกวิธีชำระ POS">
+        <div class="mobile-caption">กด "ชำระเงิน" → เลือกวิธีชำระ: เงินสด / โอนเงิน/PromptPay / โอนธนาคาร</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f5_3.jpg" onclick="openLightbox(this.src)" alt="ขายสำเร็จ">
+        <div class="mobile-caption">ขายสำเร็จ ✓ — แสดงเลขออเดอร์และยอดรวม กด "พิมพ์ใบเสร็จ" เพื่อพิมพ์ทันที</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🖨️ ใบเสร็จ Thermal Printer (พิมพ์จริง)</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame" style="width:170px">
+        <img src="image_manual/f5_4.jpg" onclick="openLightbox(this.src)" alt="ใบเสร็จ Thermal จริง">
+        <div class="mobile-caption">ใบเสร็จ Thermal Printer จริง — ชื่อร้าน เลขออเดอร์ รายการสินค้า และยอดรวม ภาษาไทยชัดเจน</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:10px">
+      <strong>การพิมพ์ใบเสร็จ:</strong> ระบบส่งไปยัง RawBT app → พิมพ์ผ่าน Bluetooth Thermal Printer 58mm<br>
+      รองรับภาษาไทยสมบูรณ์ layout ถูกต้องทุกรายการ
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 ประวัติออเดอร์ POS และรายละเอียด</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f5.5.jpg" onclick="openLightbox(this.src)" alt="รายการออเดอร์ POS">
+        <div class="mobile-caption">หน้า "จัดการออเดอร์" — รายการออเดอร์ POS ทั้งหมด แยกแท็บ: ทั้งหมด / รอดำเนินการ / เสร็จสิ้น / ยกเลิก</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f5.6.jpg" onclick="openLightbox(this.src)" alt="รายละเอียดออเดอร์ POS">
+        <div class="mobile-caption">กดที่ออเดอร์เพื่อดูรายละเอียด — สินค้า จำนวน ราคา และยอดรวมชัดเจน</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(7)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(9)">ถัดไป: โปรโมชั่น →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 9 — โปรโมชั่น / คูปอง
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-9">
+  <p class="step-title">ขั้นตอนที่ 10 — โปรโมชั่น / คูปอง</p>
+  <p class="step-sub">สร้างและจัดการโปรโมชั่น คูปองส่วนลด เพื่อกระตุ้นยอดสั่งซื้อ</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — รายการโปรโมชั่น</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b7.jpg" onclick="openLightbox(this.src)" alt="หน้าโปรโมชั่น Admin Web">
+        <div class="img-box-caption">หน้าโปรโมชั่น — รายการโปรโมชั่นและคูปองทั้งหมด พร้อมสถานะ active/inactive</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>➕ สร้างคูปองใหม่</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b8.jpg" onclick="openLightbox(this.src)" alt="สร้างคูปอง">
+        <div class="img-box-caption">สร้างคูปองใหม่ — ตั้งชื่อ มูลค่าส่วนลด ยอดขั้นต่ำ วันหมดอายุ และจำนวนสิทธิ์</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/b8_1.jpg" onclick="openLightbox(this.src)" alt="รายละเอียดคูปอง">
+        <div class="img-box-caption">รายละเอียดคูปอง — กำหนดเงื่อนไขการใช้งานอย่างละเอียด</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px">
+      <strong>วิธีลูกค้าใช้คูปอง:</strong> กด "กดรับคูปอง" ในหน้าสินค้า → คูปองถูกเก็บ → นำไปใช้ตอน Checkout อัตโนมัติ
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(8)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(10)">ถัดไป: ค่าส่ง GPS →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 10 — ค่าส่ง GPS Zone
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-10">
+  <p class="step-title">ขั้นตอนที่ 11 — ค่าส่งตามโซน GPS</p>
+  <p class="step-sub">ระบบคำนวณค่าส่งอัตโนมัติตามระยะทางจาก GPS — โกดังตั้ง Zone ร้านค้าดูได้ใน App</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — ตั้งค่า Zone ค่าส่ง</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b9.jpg" onclick="openLightbox(this.src)" alt="ตั้งค่าค่าส่ง Zone">
+        <div class="img-box-caption">หน้าค่าส่ง — กำหนด Zone ตามระยะทาง (กม.) และราคาค่าส่งแต่ละ Zone</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px">
+      <strong>วิธีตั้งค่า:</strong><br>
+      1. กำหนดระยะทางขอบเขตแต่ละ Zone เช่น Zone A: 0-5 กม. Zone B: 5-15 กม. Zone C: 15+ กม.<br>
+      2. ตั้งราคาค่าส่งของแต่ละ Zone<br>
+      3. ระบบคำนวณค่าส่งอัตโนมัติเมื่อลูกค้าสั่งซื้อ
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App — ดูตำแหน่งโกดังและ Zone ค่าส่งของร้านคุณ</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame">
+        <img src="image_manual/f8.jpg" onclick="openLightbox(this.src)" alt="GPS โกดัง App">
+        <div class="mobile-caption">หน้า GPS — แสดงตำแหน่งโกดัง ระยะทาง และ Zone ค่าส่งของร้านคุณบนแผนที่</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px">
+      <strong>หมายเหตุ:</strong> ต้องอนุญาตการเข้าถึง GPS บนมือถือ เพื่อให้ระบบวัดระยะทางและคำนวณค่าส่งได้ถูกต้อง
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(9)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(11)">ถัดไป: แชท →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 11 — แชท
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-11">
+  <p class="step-title">ขั้นตอนที่ 12 — แชท</p>
+  <p class="step-sub">สื่อสารกับทีมโกดังโดยตรงผ่านระบบแชทในตัว — ทั้ง Admin Web และ App มือถือ</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — ระบบแชท</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b10.jpg" onclick="openLightbox(this.src)" alt="แชท Admin Web">
+        <div class="img-box-caption">หน้าแชทใน Admin Web — รายการห้องสนทนา สามารถพูดคุยกับโกดังและร้านค้าต่างๆ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App — แชทมือถือ</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame">
+        <img src="image_manual/f3.jpg" onclick="openLightbox(this.src)" alt="แชท App">
+        <div class="mobile-caption">แท็บ "แชท" ใน App — ส่งข้อความและรูปภาพถึงโกดังได้ทันที</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px">
+      <strong>ใช้แชทเพื่อ:</strong> สอบถามสินค้า สต็อกและราคา แจ้งปัญหาออเดอร์ หรือขอข้อมูลเพิ่มเติมจากทีมโกดัง
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(10)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(12)">ถัดไป: ข่าวสาร/ดีล →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 12 — ข่าวสาร / ดีล
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-12">
+  <p class="step-title">ขั้นตอนที่ 13 — ข่าวสาร / ดีล (Broadcast)</p>
+  <p class="step-sub">โกดังส่งประกาศ ข่าวสาร และดีลพิเศษมาให้ร้านค้าทุกร้านพร้อมกัน</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — ส่ง Broadcast ข่าวสาร</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b11.jpg" onclick="openLightbox(this.src)" alt="Broadcast Admin Web">
+        <div class="img-box-caption">หน้า "แจ้งเตือน" ใน Admin Web — สร้างและส่งข่าวสาร/ดีลไปยังร้านค้าทุกร้านพร้อมกัน</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App — รับข่าวสารและดีล</h3>
+    <div class="img-row" style="justify-content:center">
+      <div class="mobile-frame">
+        <img src="image_manual/f9_1.jpg" onclick="openLightbox(this.src)" alt="ข่าวสาร/ดีล App">
+        <div class="mobile-caption">แท็บ "โปรไฟล์" → "ข่าวสาร/ดีล" — รับดีลพิเศษและประกาศจากโกดัง</div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px">
+      <strong>เปิดการแจ้งเตือน</strong> เพื่อรับข่าวสารดีลใหม่ทันที — ตั้งค่าได้ที่ โปรไฟล์ → การแจ้งเตือน → เปิด "โปรโมชั่นและส่วนลด"
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(11)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(13)">ถัดไป: Review & Point →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 13 — Review & Customer Point
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-13">
+  <p class="step-title">ขั้นตอนที่ 14 — ตรวจสอบ Review & Customer Point</p>
+  <p class="step-sub">ตรวจสอบและอนุมัติรีวิวจากลูกค้า — เมื่ออนุมัติแล้ว ลูกค้าจะได้รับ Customer Point อัตโนมัติ</p>
+
+  <div class="card">
+    <h3>🌐 Admin Web — รายการ Review</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b2.jpg" onclick="openLightbox(this.src)" alt="Review Admin Web">
+        <div class="img-box-caption">เมนู "ตรวจสอบ REVIEW" — รายการรีวิวจากลูกค้าทั้งหมด พร้อมสถานะอนุมัติ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⭐ รายละเอียด Review และการอนุมัติ</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b2_1.jpg" onclick="openLightbox(this.src)" alt="รายละเอียด Review">
+        <div class="img-box-caption">รายละเอียดรีวิว — คะแนนดาว ความคิดเห็น รูปภาพ และข้อมูลลูกค้า</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/b2_2.jpg" onclick="openLightbox(this.src)" alt="อนุมัติ Review">
+        <div class="img-box-caption">อนุมัติ/ปฏิเสธรีวิว — เมื่ออนุมัติ ลูกค้าจะได้รับ Customer Point ทันที</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🌐 Admin Web — Customer Point</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b5.jpg" onclick="openLightbox(this.src)" alt="Customer Point">
+        <div class="img-box-caption">เมนู "CUSTOMER POINT" — รายการแต้มสะสมของลูกค้าแต่ละราย</div>
+      </div>
+      <div class="img-box">
+        <img src="image_manual/b5_1.jpg" onclick="openLightbox(this.src)" alt="รายละเอียด Customer Point">
+        <div class="img-box-caption">รายละเอียดแต้ม — ประวัติการได้รับและใช้แต้มของลูกค้า</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:12px">
+      <strong>ระบบ Customer Point:</strong><br>
+      1. ลูกค้าเขียนรีวิวหลังได้รับสินค้า<br>
+      2. ร้านค้า/โกดังอนุมัติรีวิวใน Admin Web<br>
+      3. ลูกค้าได้รับแต้มอัตโนมัติ → นำมาแลกส่วนลดครั้งต่อไป
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(12)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(14)">ถัดไป: โปรไฟล์ & ตั้งค่า →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STEP 14 — โปรไฟล์ & ตั้งค่า
+═══════════════════════════════════════════ -->
+<div class="step-section" id="step-14">
+  <p class="step-title">ขั้นตอนที่ 15 — โปรไฟล์ & ตั้งค่า</p>
+  <p class="step-sub">จัดการข้อมูลส่วนตัว แพ็กเกจ การแจ้งเตือน ข้อมูลร้าน รายงาน และออกจากระบบ</p>
+
+  <div class="card">
+    <h3>📱 App — หน้าโปรไฟล์หลักและแพ็กเกจ</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f9.jpg" onclick="openLightbox(this.src)" alt="โปรไฟล์หลัก">
+        <div class="mobile-caption">หน้าโปรไฟล์ — ชื่อผู้ใช้ role แพ็กเกจปัจจุบัน และเมนูตั้งค่าต่างๆ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f9_2.jpg" onclick="openLightbox(this.src)" alt="เลือกแพ็กเกจ">
+        <div class="mobile-caption">เลือกแผนการใช้งาน — Free Trial (ฟรี) / Starter ฿299/เดือน / แพ็กเกจอื่นๆ กด "อัปเกรด"</div>
+      </div>
+    </div>
+    <div class="info" style="margin-top:10px">
+      <strong>แพ็กเกจ Free Trial:</strong> ออเดอร์สูงสุด 50 รายการ ประวัติ 30 วัน<br>
+      <strong>แพ็กเกจ Starter:</strong> ออเดอร์ไม่จำกัด ประวัติ 1 ปี Export Excel/PDF รายงานซื้อ-ขาย
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>👤 แก้ไขโปรไฟล์และตั้งค่าการแจ้งเตือน</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f9_3.jpg" onclick="openLightbox(this.src)" alt="แก้ไขโปรไฟล์">
+        <div class="mobile-caption">แก้ไขโปรไฟล์ — กรอกชื่อและนามสกุล กด "บันทึก"</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f9_4.jpg" onclick="openLightbox(this.src)" alt="การแจ้งเตือน">
+        <div class="mobile-caption">การแจ้งเตือน — เปิด/ปิด: สถานะคำสั่งซื้อ และโปรโมชั่น/ส่วนลด</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🏪 ข้อมูลร้านค้าและการออกจากระบบ</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f9_5.jpg" onclick="openLightbox(this.src)" alt="ข้อมูลร้านค้า/ติดต่อ">
+        <div class="mobile-caption">ข้อมูลร้านค้า — ชื่อร้าน เวลาทำการ และช่องทางติดต่อ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f9_6.jpg" onclick="openLightbox(this.src)" alt="ออกจากระบบ">
+        <div class="mobile-caption">ออกจากระบบ — กด "ออกจากระบบ" → ยืนยัน เพื่อ Logout อย่างปลอดภัย</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📱 App — รายงานซื้อ-ขาย และข้อมูลร้าน</h3>
+    <div class="img-row" style="justify-content:center;gap:14px">
+      <div class="mobile-frame">
+        <img src="image_manual/f6.jpg" onclick="openLightbox(this.src)" alt="รายงานซื้อ-ขาย">
+        <div class="mobile-caption">รายงานซื้อ-ขาย — ยอดขาย รายได้รายวัน/รายเดือน กราฟและสถิติ</div>
+      </div>
+      <div class="mobile-frame">
+        <img src="image_manual/f7.jpg" onclick="openLightbox(this.src)" alt="ข้อมูลร้าน">
+        <div class="mobile-caption">ข้อมูลร้านค้า — ชื่อร้าน ที่อยู่ และรายละเอียดการติดต่อ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🌐 Admin Web — ตั้งค่าระบบ</h3>
+    <div class="img-row">
+      <div class="img-box">
+        <img src="image_manual/b12.jpg" onclick="openLightbox(this.src)" alt="ตั้งค่า Admin Web">
+        <div class="img-box-caption">เมนู "ตั้งค่า" ใน Admin Web — ตั้งค่าข้อมูลร้าน นโยบาย และการแจ้งเตือนระบบ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- สรุป -->
+  <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:2px solid #81c784">
+    <h3 style="color:#1b5e20">🎉 ยินดีด้วย! คุณพร้อมใช้งาน TwentyShop ครบทุกฟีเจอร์แล้ว</h3>
+    <ul class="flow-list">
+      <li><span class="flow-num" style="background:#43a047">✓</span><span>เข้าสู่ระบบ Admin Web และ App ได้แล้ว</span></li>
+      <li><span class="flow-num" style="background:#43a047">✓</span><span>จัดการสินค้า หมวดหมู่ และดู Stock Badge / Stock Card ได้</span></li>
+      <li><span class="flow-num" style="background:#43a047">✓</span><span>สั่งซื้อสินค้าจากโกดัง รับคูปอง และส่ง Slip ได้</span></li>
+      <li><span class="flow-num" style="background:#43a047">✓</span><span>รับสินค้าเข้า ตรวจนับ พิมพ์รายงาน และแชร์ PDF ได้</span></li>
+      <li><span class="flow-num" style="background:#43a047">✓</span><span>ขายหน้าร้านด้วย POS พิมพ์ใบเสร็จ Thermal Printer ได้</span></li>
+      <li><span class="flow-num" style="background:#43a047">✓</span><span>ใช้โปรโมชั่น ค่าส่ง GPS แชท ข่าวสาร Review และ Point ได้</span></li>
+    </ul>
+    <div class="success" style="margin-top:14px">
+      <strong>หากมีปัญหาหรือคำถาม</strong> ติดต่อทีมโกดังผ่านระบบแชทในแอป ได้ตลอดเวลาทำการ<br>
+      ย้อนดูขั้นตอนได้จากคู่มือนี้ทุกเมื่อ — กดแท็บด้านบนเพื่อข้ามไปหัวข้อที่ต้องการได้ทันที
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goTo(13)">← ก่อนหน้า</button>
+    <button class="btn btn-next" onclick="goTo(0)" style="background:#43a047">กลับหน้าหลัก 🏠</button>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<script>
+  const TOTAL_STEPS = 15;
+
+  function goTo(idx) {
+    document.querySelectorAll('.step-section').forEach(function(s, i) {
+      s.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.tab-btn').forEach(function(b, i) {
+      b.classList.toggle('active', i === idx);
+    });
+    updateProgress(idx);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    var tabs = document.querySelectorAll('.tab-btn');
+    if (tabs[idx]) {
+      tabs[idx].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+    }
+  }
+
+  function updateProgress(idx) {
+    var pct = Math.round(((idx + 1) / TOTAL_STEPS) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = 'ขั้นตอนที่ ' + (idx + 1) + ' จาก ' + TOTAL_STEPS;
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightboxImg').src = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
